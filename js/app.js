@@ -41,17 +41,29 @@ function leerDatosCurso(curso) {
 
 // Muestra carrito de compras HTML
 function carritoHTML() {
+
     // Limpiear el HTML
     limpiarHTML();
 
     // Recorre el carrito y general el HTML
     articulosCarrito.forEach(curso => {
+        const { imagen, titulo, precio, cantidad, id } = curso;
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>
-                ${curso.titulo}
+               <img src="${imagen}" width="100">
+            </td>
+
+            <td>${titulo}</td>
+            <td>${precio}</td>
+            <td>${cantidad}</td>
+            
+            <td>
+                <a href="#" data-id="${id}" class="borrar-curso">X</a>
             </td>
         `;
+
         // Agrega el HTML de carrito al tbody
         contenedorCarrito.appendChild(row);
     });
