@@ -7,11 +7,14 @@ let articulosCarrito = []
 
 cargarEventListeners();
 function cargarEventListeners() {
-    // Cuando agregas un curso presionando "Agregar"
-    listaCursos.addEventListener('click', agregarCurso);
+    listaCursos.addEventListener('click', agregarCurso); // Cuando agregas un curso presionando "Agregar"
+    carrito.addEventListener('click', eliminarCurso); // Eliminar del carrito
 
-    // Eliminar del carrito
-    carrito.addEventListener('click', eliminarCurso);
+    // 
+    document.addEventListener('DOMContentLoaded', () => {
+        articulosCarrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        carritoHTML();
+    })
 
     // Vaciar carrito
     vaciarCarritoBtn.addEventListener('click', () => {
@@ -33,10 +36,7 @@ function agregarCurso(e) {
 function eliminarCurso(e) {
     if (e.target.classList.contains('borrar-curso')) {
         const cursoId = e.target.getAttribute('data-id');
-
-        // Eliminar del arreglo de articulosCarrito por el data-id
-        articulosCarrito = articulosCarrito.filter(curso => curso.id !== cursoId);
-
+        articulosCarrito = articulosCarrito.filter(curso => curso.id !== cursoId); // Eliminar del arreglo de articulosCarrito por el data-id
         carritoHTML(); //Itera sobre el carrito y muestra el HTML
     }
 }
@@ -53,8 +53,7 @@ function leerDatosCurso(curso) {
         cantidad: 1
     }
 
-    // Revisa si un elemento ya existe en el carrito
-    const existe = articulosCarrito.some(curso => curso.id === infoCurso.id)
+    const existe = articulosCarrito.some(curso => curso.id === infoCurso.id)  // Revisa si un elemento ya existe en el carrito
 
     if (existe) {
         // Actualizamos el carrito
@@ -68,17 +67,14 @@ function leerDatosCurso(curso) {
         });
         articulosCarrito = [...cursos];
     } else {
-        // Agrega el elemento al carrito
-        articulosCarrito = [...articulosCarrito, infoCurso];
+        articulosCarrito = [...articulosCarrito, infoCurso]; // Agrega el elemento al carrito
     }
     carritoHTML();
 }
 
 // Muestra carrito de compras HTML
 function carritoHTML() {
-
-    // Limpiear el HTML
-    limpiarHTML();
+    limpiarHTML(); // Limpiear el HTML
 
     // Recorre el carrito y general el HTML
     articulosCarrito.forEach(curso => {
@@ -99,16 +95,18 @@ function carritoHTML() {
             </td>
         `;
 
-        // Agrega el HTML de carrito al tbody
-        contenedorCarrito.appendChild(row);
+        contenedorCarrito.appendChild(row); // Agrega el HTML de carrito al tbody
     });
+
+    sincronizarStorage(); // Agregar carrito de compras al storage
+}
+
+function sincronizarStorage() {
+    localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
 }
 
 // Eliminar los cursos del tbody
 function limpiarHTML() {
-    // Forma Lenta
-    // contenedorCarrito.innerHTML = ''; 
-
     while (contenedorCarrito.firstChild) {
         contenedorCarrito.removeChild(contenedorCarrito.firstChild)
     }
